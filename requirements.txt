@@ -1,0 +1,15 @@
+fastapi==0.115.0
+uvicorn[standard]>=0.31.1
+sqlalchemy==2.0.35
+psycopg2-binary>=2.9.10
+pydantic>=2.11.0,<3.0.0
+python-dotenv==1.0.1
+boto3==1.35.36
+alembic==1.13.3
+python-multipart==0.0.12
+apscheduler==3.10.4
+strands-agents==1.53.0
+bcrypt==4.2.1
+pyjwt==2.10.1
+slowapi==0.1.10
+requests==2.32.5
