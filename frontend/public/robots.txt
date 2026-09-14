@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /staff
+Disallow: /processing/
+
+Sitemap: https://civicrelay.org/sitemap.xml
+
