@@ -26,6 +26,8 @@ async def upload_image(request: Request, file: UploadFile = File(...), current_u
         raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.content_type}")
 
     contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
     if len(contents) > MAX_SIZE_BYTES:
         raise HTTPException(status_code=400, detail="Image too large (max 8MB)")
 

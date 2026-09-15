@@ -44,13 +44,13 @@ export const LoginPage: React.FC = () => {
   };
 
   const handleQuickCitizen = () => {
-    setEmail('sarah.jenkins@example.com');
-    setPassword('citizen1234');
+    setEmail('demo@civicrelay.io');
+    setPassword('demo1234');
   };
 
   const handleQuickStaff = () => {
-    setEmail('marcus.vance@citygov.org');
-    setPassword('staff1234');
+    setEmail('staff@civicrelay.io');
+    setPassword('demo1234');
   };
 
   return (

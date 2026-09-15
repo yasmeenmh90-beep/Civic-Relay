@@ -23,6 +23,7 @@ import {
   Eye,
   Layers,
   Zap,
+  MessageCircle,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Textarea } from '../components/ui/Textarea';
@@ -271,11 +272,24 @@ export const ReportIssuePage: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5 text-neon-cyan" />
             AUTONOMOUS MULTI-AGENT INGESTION
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
+                    <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
             Report a Civic Hazard
           </h1>
           <p className="text-sm sm:text-base text-foreground-secondary mt-1 max-w-2xl leading-relaxed">
             Report once via text, photo, or audio. CivicRelay's autonomous AI agents handle jurisdiction mapping, formal legal notice drafting, and 24/7 SLA watchdog enforcement.
+          </p>
+          <p className="text-xs text-foreground-secondary mt-2 flex items-center gap-1.5">
+            <MessageCircle className="w-3.5 h-3.5 text-neon-mint" />
+            Prefer WhatsApp? Message{' '}
+            <a
+              href="https://wa.me/15551962924"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-neon-cyan hover:underline"
+            >
+              +1 (555) 196-2924
+            </a>{' '}
+            to report instantly.
           </p>
         </div>
 
@@ -307,6 +321,16 @@ export const ReportIssuePage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      <a
+        href="https://wa.me/15551962924"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 mb-6 rounded-xl text-xs font-bold bg-[#25D366]/15 text-[#25D366] border border-[#25D366]/30 hover:bg-[#25D366]/25 transition-all"
+      >
+        <MessageCircle className="w-3.5 h-3.5" />
+        Message on WhatsApp
+      </a>
 
       {formError && (
         <div className="p-4 mb-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs sm:text-sm text-rose-400 font-medium flex items-center gap-2">

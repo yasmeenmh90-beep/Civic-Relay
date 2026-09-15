@@ -29,10 +29,10 @@ export const CivicMap: React.FC<CivicMapProps> = ({
   const [selectedCluster, setSelectedCluster] = useState<IssueCluster | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
-  const getTileUrls = () => {
+    const getTileUrls = () => {
+    const token = import.meta.env.VITE_MAPBOX_TOKEN;
     return [
-      'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-      'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+      `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/256/{z}/{x}/{y}@2x?access_token=${token}`,
     ];
   };
 
@@ -51,7 +51,7 @@ export const CivicMap: React.FC<CivicMapProps> = ({
             type: 'raster',
             tiles: tiles,
             tileSize: 256,
-            attribution: '© OpenStreetMap contributors, © CARTO',
+            attribution: '© Mapbox, © OpenStreetMap contributors',
           },
         },
         layers: [

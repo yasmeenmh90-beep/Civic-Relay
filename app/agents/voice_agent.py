@@ -37,7 +37,7 @@ POLL_TIMEOUT_SECONDS = 60
 # Transcribe API. Extend this list for your deployment's actual user base.
 CANDIDATE_LANGUAGES = [
     "en-US", "es-US", "fr-FR", "de-DE", "pt-BR", "hi-IN",
-    "zh-CN", "ar-SA", "ur-PK", "ja-JP", "ko-KR", "ru-RU",
+    "zh-CN", "ar-SA", "ja-JP", "ko-KR", "ru-RU",
 ]
 
 CONTENT_TYPE_TO_MEDIA_FORMAT = {
