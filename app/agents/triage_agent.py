@@ -55,10 +55,12 @@ EMERGENCY_WORDS = ["emergency", "life-threatening", "explosion", "gas leak"]
 def _keyword_classify(text: str):
     text_lower = text.lower()
     category = "other"
+    best_score = 0
     for cat, keywords in CATEGORY_KEYWORDS.items():
-        if any(kw in text_lower for kw in keywords):
+        score = sum(1 for kw in keywords if kw in text_lower)
+        if score > best_score:
+            best_score = score
             category = cat
-            break
 
     severity = "normal"
     if any(w in text_lower for w in EMERGENCY_WORDS):
