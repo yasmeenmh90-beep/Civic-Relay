@@ -49,6 +49,20 @@ import { ErrorState } from '../components/ui/ErrorState';
 import { EmptyState } from '../components/ui/EmptyState';
 import { formatNumber, formatPercent } from '../utils/formatters';
 
+function computeWeekOverWeekChange(trends: TrendDataPoint[]): { value: string; isPositive: boolean } | undefined {
+  if (trends.length < 14) return undefined; // not enough data for two full weeks
+  const last7 = trends.slice(-7);
+  const prev7 = trends.slice(-14, -7);
+  const lastSum = last7.reduce((sum, t) => sum + t.reports, 0);
+  const prevSum = prev7.reduce((sum, t) => sum + t.reports, 0);
+  if (prevSum === 0) return undefined; // avoid divide-by-zero / meaningless % from 0
+  const pctChange = Math.round(((lastSum - prevSum) / prevSum) * 100);
+  return {
+    value: `${pctChange >= 0 ? '+' : ''}${pctChange}% vs last week`,
+    isPositive: pctChange >= 0,
+  };
+}
+
 export const StaffDashboardPage: React.FC = () => {
   const { user, isStaff, isAuthenticated, isLoading: authLoading } = useAuth();
 
@@ -148,7 +162,7 @@ export const StaffDashboardPage: React.FC = () => {
                   title="Total Influx Reports"
                   value={formatNumber(overview.total_reports)}
                   subtitle="Autonomous ingest from citizens"
-                  trend={{ value: '+14% vs last week', isPositive: true }}
+                  trend={computeWeekOverWeekChange(trends)}
                   icon={<Layers className="w-6 h-6" />}
                   iconBgColor="bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-neon-cyan border border-cyan-200 dark:border-cyan-800"
                 />
@@ -157,7 +171,7 @@ export const StaffDashboardPage: React.FC = () => {
                   title="Active Managed Cases"
                   value={formatNumber(overview.active_issues)}
                   subtitle="Under municipal investigation"
-                  trend={{ value: '342 in flight' }}
+                  trend={overview.average_resolution_hours ? { value: `~${overview.average_resolution_hours}h avg resolution` } : undefined}
                   icon={<Clock className="w-6 h-6" />}
                   iconBgColor="bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                 />
@@ -175,7 +189,7 @@ export const StaffDashboardPage: React.FC = () => {
                   title="Autonomous Escalations"
                   value={formatNumber(overview.escalated_issues)}
                   subtitle="Approved citizen escalations"
-                  trend={{ value: '78 escalated', isPositive: false }}
+                  trend={overview.total_reports ? { value: `${overview.escalated_issues} of ${overview.total_reports} total`, isPositive: false } : undefined}
                   icon={<Flame className="w-6 h-6" />}
                   iconBgColor="bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800"
                 />

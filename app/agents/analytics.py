@@ -93,12 +93,18 @@ def get_by_authority(db: Session) -> list[dict]:
             (t.resolved_at - t.submitted_at).total_seconds() / 3600
             for t in resolved if t.resolved_at and t.submitted_at
         ]
+        on_time = [
+            t for t in resolved
+            if t.resolved_at and t.sla_deadline and t.resolved_at <= t.sla_deadline
+        ]
+        sla_compliance_rate = round(len(on_time) / len(resolved) * 100, 1) if resolved else None
         result.append({
             "authority": authority,
             "total": len(group),
             "open": len([t for t in group if t.status != TicketStatus.RESOLVED]),
             "resolved": len(resolved),
             "avg_resolution_hours": round(sum(resolution_hours) / len(resolution_hours), 1) if resolution_hours else None,
+            "sla_compliance_rate": sla_compliance_rate,
         })
 
     return sorted(result, key=lambda r: r["total"], reverse=True)

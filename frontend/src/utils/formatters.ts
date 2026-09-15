@@ -25,6 +25,7 @@ export function formatNumber(num: number): string {
   return new Intl.NumberFormat('en-US').format(num);
 }
 
-export function formatPercent(num: number): string {
+export function formatPercent(num: number | null | undefined): string {
+  if (num === null || num === undefined) return 'N/A';
   return `${num.toFixed(1)}%`;
 }

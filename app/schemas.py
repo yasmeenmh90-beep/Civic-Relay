@@ -114,6 +114,7 @@ class AnalyticsAuthorityOut(BaseModel):
     open: int
     resolved: int
     avg_resolution_hours: Optional[float]
+    sla_compliance_rate: Optional[float]
 
 
 class AnalyticsMapPointOut(BaseModel):

@@ -16,6 +16,7 @@ import {
   AlertTriangle,
   Flame,
 } from 'lucide-react';
+import { API_BASE_URL } from '@/api/real/client';
 
 export interface IssueCardProps {
   issue: Issue;
@@ -63,7 +64,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, className }) => {
         {issue.image_url && (
           <div className="relative w-full h-32 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/60 my-2">
             <img
-              src={issue.image_url}
+              src={issue.image_url?.startsWith('http') ? issue.image_url : `${API_BASE_URL}${issue.image_url}`}
               alt={issue.title || 'Civic Issue'}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />

@@ -68,6 +68,7 @@ export function mapIssueStatus(status?: string): StatusConfig {
 
     case 'escalation_pending':
     case 'escalation_ready':
+    case 'awaiting_approval':
       return {
         label: 'Escalation Ready',
         badgeClass: 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-200 dark:border-amber-700/60',

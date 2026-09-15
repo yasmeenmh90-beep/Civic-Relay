@@ -38,7 +38,7 @@ export function normalizeAuthorityAnalytics(item: any, index: number): Authority
     resolved_issues: Number(item.resolved ?? item.resolved_issues ?? 0),
     escalated_issues: Number(item.escalated ?? item.escalated_issues ?? 0),
     avg_response_hours: Number(item.avg_resolution_hours ?? item.avg_response_hours ?? item.average_response_time ?? 0),
-    sla_adherence_percent: Number(item.sla_adherence_percent ?? item.sla_compliance ?? 92),
+    sla_adherence_percent: item.sla_compliance_rate ?? item.sla_adherence_percent ?? item.sla_compliance ?? null,
     category: item.category || 'Infrastructure Works',
   };
 }
