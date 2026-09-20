@@ -1,4 +1,5 @@
-# CivicRelay
+# 🏙️ CivicRelay: A Human-Gated Multi-Agent Pipeline for Autonomous Civic Issue Resolution and Predictive Infrastructure Monitoring
+
 
 ![CivicRelay](Images/Civic-Relay.png)
 
