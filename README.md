@@ -1,4 +1,6 @@
-# CivicRelay
+# 🏙️ CivicRelay: A Human-Gated Multi-Agent Pipeline for Autonomous Civic Issue Resolution and Predictive Infrastructure Monitoring
+
+![CivicRelay](Images/Civic-Relay.png)
 
 > **Autonomous Civic Resolution Platform & Municipal Dispatch Engine**
 > *Report a civic issue once. CivicRelay classifies the hazard, identifies the exact municipal authority, files an official legal-grade complaint, actively monitors repair deadlines, and escalates when statutory service charters are breached.*
@@ -38,21 +40,34 @@ When a citizen reports a pothole, water leak, broken streetlight, or illegal was
 
 ---
 
-## 5-Stage Autonomous Agent Engine
+## Architecture Diagrams
 
-```
+**Full system architecture** — browser app, transport, FastAPI backend, the five-agent pipeline, the predictive layer, the data layer, and every external service, including the paths that bypass the frontend entirely (WhatsApp and IoT intake).
+
+![CivicRelay Full System Architecture](Images/civicrelay-full-system-architecture.png)
+
+**Backend system architecture** — API entry, security & access, the five-agent pipeline, routing & dispatch, SLA/escalation/human-in-the-loop, sensors & prediction, data persistence, and analytics/audit, laid out end to end.
+
+![CivicRelay Backend Architecture](Images/civicrelay-backend-architecture.png)
+
+**End-to-end workflow** — a single report's path from intake through triage, clustering, research, filing, SLA tracking, human-gated escalation, and resolution, plus how sensor data feeds the predictive layer in parallel.
+
+![CivicRelay Workflow](Images/civicrelay-workflow.png)
+
+---
+
+## 5-Stage Autonomous Agent Engine
 Citizen Report ──► [ Triage Agent ] ──► [ Research Agent ] ──► [ Action Agent ]
-                        │                     │                     │
-                  Severity & Type       Department & SLA     Formal Complaint & Ticket
-                                                                    │
-                                                                    ▼
-                                                            [ Tracking Agent ] (24/7 SLA Watchdog)
-                                                                    │
-                                                           Deadline Breached?
-                                                                    │
-                                                                    ▼
-                                                           [ Escalation Agent ] (Requires Citizen Approval)
-```
+│ │ │
+Severity & Type Department & SLA Formal Complaint & Ticket
+│
+▼
+[ Tracking Agent ] (24/7 SLA Watchdog)
+│
+Deadline Breached?
+│
+▼
+[ Escalation Agent ] (Requires Citizen Approval)
 
 1. **Triage Agent**: Inspects problem text and uploaded photo evidence to determine defect classification and hazard severity level. Strands structured-output classification, with a deterministic keyword fallback.
 2. **Research Agent**: Cross-references city municipal boundaries to map the exact responsible authority and establishes the guaranteed resolution window. Strands agent + a real `lookup_department_sla` tool, direct-lookup fallback.
@@ -65,50 +80,52 @@ Citizen Report ──► [ Triage Agent ] ──► [ Research Agent ] ──►
 ## Project Structure
 
 This repo currently combines the original backend (root-level) with the frontend merged in from a teammate's repo:
-
-```
 Civic-Relay/
-├── app/                           # FastAPI application package
-│   ├── agents/                    # Autonomous agents (Triage, Research, Action, Tracking, Escalation, ...)
-│   ├── routers/                   # API endpoints (users, issues, tickets, uploads, analytics, iot, whatsapp, dev)
-│   ├── models.py                  # SQLAlchemy database schema
-│   ├── schemas.py                 # Pydantic request/response models
-│   ├── deps.py                    # Auth & staff-verification guards
-│   ├── main.py                    # FastAPI app entry, CORS, router registration, scheduler startup
-│   ├── logging_config.py          # Structured JSON/text logging setup
-│   ├── middleware.py              # Request ID + access logging middleware
-│   ├── db.py                      # SQLAlchemy engine/session
-│   └── storage.py                 # S3 client (falls back to local ./uploads)
-├── alembic/                       # Database schema migrations
-├── scripts/                       # simulate_iot_sensors.py and other utility scripts
-├── tests/                         # Pytest suite (53 tests)
-├── frontend/                      # React + TypeScript frontend (merged from teammate's repo)
-│   ├── public/                    # Static assets (favicon, robots.txt, sitemap)
-│   ├── src/
-│   │   ├── api/                   # Typed backend client & data adapters (real + mock)
-│   │   ├── components/            # UI components (agents, tickets, analytics, map, layout, ui)
-│   │   ├── context/                # AuthContext, ThemeContext, ToastContext
-│   │   ├── pages/                  # Home, Login, Signup, ReportIssue, IssueDetails, MyIssues,
-│   │   │                            CommunityMap, StaffDashboard, Processing, NotFound, ...
-│   │   ├── types/                  # TypeScript interfaces
-│   │   ├── hooks/                  # usePolling, useSLA
-│   │   └── utils/                  # formatters, date, statusMapper, analytics helpers
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── .env.example
-├── Dockerfile                     # Backend production container definition
-├── docker-compose.yml             # Multi-container orchestration (backend + Postgres)
-├── .env.example                   # Backend environment variables template
+├── Images/ # Architecture diagrams and project banner
+│ ├── Civic-Relay.png
+│ ├── civicrelay-backend-architecture.png
+│ ├── civicrelay-full-system-architecture.png
+│ └── civicrelay-workflow.png
+├── app/ # FastAPI application package
+│ ├── agents/ # Autonomous agents (Triage, Research, Action, Tracking, Escalation, ...)
+│ ├── routers/ # API endpoints (users, issues, tickets, uploads, analytics, iot, whatsapp, dev)
+│ ├── models.py # SQLAlchemy database schema
+│ ├── schemas.py # Pydantic request/response models
+│ ├── deps.py # Auth & staff-verification guards
+│ ├── main.py # FastAPI app entry, CORS, router registration, scheduler startup
+│ ├── logging_config.py # Structured JSON/text logging setup
+│ ├── middleware.py # Request ID + access logging middleware
+│ ├── db.py # SQLAlchemy engine/session
+│ └── storage.py # S3 client (falls back to local ./uploads)
+├── alembic/ # Database schema migrations
+├── scripts/ # simulate_iot_sensors.py and other utility scripts
+├── tests/ # Pytest suite
+├── frontend/ # React + TypeScript frontend (merged from teammate's repo)
+│ ├── public/ # Static assets (favicon, robots.txt, sitemap)
+│ ├── src/
+│ │ ├── api/ # Typed backend client & data adapters (real + mock)
+│ │ ├── components/ # UI components (agents, tickets, analytics, map, layout, ui)
+│ │ ├── context/ # AuthContext, ThemeContext, ToastContext
+│ │ ├── pages/ # Home, Login, Signup, ReportIssue, IssueDetails, MyIssues,
+│ │ │ CommunityMap, StaffDashboard, Processing, NotFound, ...
+│ │ ├── types/ # TypeScript interfaces
+│ │ ├── hooks/ # usePolling, useSLA
+│ │ └── utils/ # formatters, date, statusMapper, analytics helpers
+│ ├── index.html
+│ ├── package.json
+│ ├── tsconfig.json
+│ ├── vite.config.ts
+│ ├── tailwind.config.js
+│ ├── postcss.config.js
+│ └── .env.example
+├── Dockerfile # Backend production container definition
+├── docker-compose.yml # Multi-container orchestration (backend + Postgres)
+├── .env.example # Backend environment variables template
 ├── alembic.ini
 ├── pytest.ini
 ├── requirements.txt
 ├── requirements-dev.txt
 └── README.md
-```
 
 > **Note:** unlike the frontend author's original repo (which nested everything under `backend/` and `frontend/`), this repo keeps the backend at the project root — the frontend was merged in as a sibling `frontend/` folder. Any instructions below that say "from the project root" mean the root of *this* repo, not a `backend/` subfolder.
 
@@ -144,10 +161,7 @@ uvicorn app.main:app --reload
 - **Health check**: `http://localhost:8000/health`
 
 By default it uses a local SQLite file (`civicrelay.db`) — zero setup needed. To use Postgres instead, set `DATABASE_URL` (e.g. in a `.env` file):
-
-```
 DATABASE_URL=postgresql://user:password@localhost:5432/civicrelay
-```
 
 ### Step 2: Set Up & Start the Frontend
 
@@ -202,7 +216,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-Tests run against an isolated in-memory SQLite database and don't need AWS credentials — they exercise the deterministic fallback paths (keyword classifier, lookup table, templates), which is exactly what runs locally without Bedrock configured. 53 tests cover auth, the full report → ticket → escalation → approval → resolve lifecycle, ownership checks, community clustering (including persistence behavior), rate limiting, the municipal API client, health checks, and the triage classifier.
+Tests run against an isolated in-memory SQLite database and don't need AWS credentials — they exercise the deterministic fallback paths (keyword classifier, lookup table, templates), which is exactly what runs locally without Bedrock configured. Tests cover auth, the full report → ticket → escalation → approval → resolve lifecycle, ownership checks, community clustering (including persistence behavior), rate limiting, the municipal API client, health checks, IoT ingestion and deduplication, WhatsApp webhook handling, predictive maintenance math, and analytics role-gating.
 
 ### Frontend production build
 
@@ -220,111 +234,83 @@ Compiles TypeScript types and builds optimized production bundles with Vite.
 Every endpoint except signup and login requires an `Authorization: Bearer <token>` header. Get a token from `/users/login` (or `/dev/reset` for a fast demo token) and attach it to every subsequent request.
 
 **Sign up**
-```
 POST /users
 { "name": "Sai", "email": "sai@civicrelay.io", "password": "at least something" }
 → 200 { "id": "...", "name": "...", "email": "..." }
 → 409 if that email is already registered
-```
 
 **Log in**
-```
 POST /users/login
 { "email": "sai@civicrelay.io", "password": "..." }
 → 200 { "access_token": "...", "token_type": "bearer" }
 → 401 on wrong email/password
-```
 
 **Who am I**
-```
-GET /users/me   (auth required)
+GET /users/me (auth required)
 → 200 UserOut
-```
 
 **Upload an issue photo** (optional — call first, pass the returned `image_url` into `POST /issues`)
-```
-POST /uploads/image   (multipart/form-data, field name "file", auth required)
+POST /uploads/image (multipart/form-data, field name "file", auth required)
 → 200 { "image_url": "/uploads/<file>.jpg", "vision_analysis"?: {...} }
-```
 `vision_analysis` is only present when Bedrock is configured with a vision-capable model.
 
 **Report by voice** (optional — transcribes speech, auto-detects language)
-```
-POST /uploads/audio   (multipart/form-data, field name "file", auth required)
+POST /uploads/audio (multipart/form-data, field name "file", auth required)
 → 200 { "transcript": "...", "detected_language": "es-US", "confidence": 0.97 }
 → 503 if voice reporting isn't configured (needs S3_BUCKET + AWS creds)
 → 502 if transcription failed or timed out — fall back to letting them type
-```
 
 **Report an issue** — runs Triage → Research → Action synchronously and returns the created ticket.
-```
-POST /issues   (auth required)
+POST /issues (auth required)
 {
-  "description": "There is a large pothole near this location.",
-  "latitude": 12.34,
-  "longitude": 56.78,
-  "image_url": "/uploads/....jpg",   // optional
-  "language": "es-US",               // optional
-  "urgency_hint": "high"             // optional: normal/high/emergency
+"description": "There is a large pothole near this location.",
+"latitude": 12.34,
+"longitude": 56.78,
+"image_url": "/uploads/....jpg", // optional
+"language": "es-US", // optional
+"urgency_hint": "high" // optional: normal/high/emergency
 }
 → 200 IssueOut (includes nested ticket + agent logs, see app/schemas.py)
-```
 
 **Dashboard list**
-```
-GET /issues   (auth required)
+GET /issues (auth required)
 → 200 [IssueOut, ...]
-```
 
 **Issue detail (Agent Timeline view)** — 403 if it's not your issue
-```
-GET /issues/{issue_id}   (auth required)
-→ 200 IssueOut  (logs array has agent_name, action, timestamp)
-```
+GET /issues/{issue_id} (auth required)
+→ 200 IssueOut (logs array has agent_name, action, timestamp)
 
 **SLA / escalation flow** — all auth required, all 403 if the ticket isn't yours
-```
-GET  /tickets/{ticket_id}/sla-status
-POST /tickets/{ticket_id}/simulate-sla-expiry      (demo button — fast-forwards SLA)
-POST /tickets/{ticket_id}/escalate                 (manual override; usually not needed)
-POST /tickets/{ticket_id}/approve-escalation        (human approves → status "escalated")
+GET /tickets/{ticket_id}/sla-status
+POST /tickets/{ticket_id}/simulate-sla-expiry (demo button — fast-forwards SLA)
+POST /tickets/{ticket_id}/escalate (manual override; usually not needed)
+POST /tickets/{ticket_id}/approve-escalation (human approves → status "escalated")
 POST /tickets/{ticket_id}/resolve
-```
 
 Ticket status flow: `waiting_for_authority` → (SLA exceeded) → `awaiting_approval` → (human approves) → `escalated`. A background job (Tracking Agent) sweeps open tickets every `TRACKING_INTERVAL_SECONDS` (default 30s; lower it for a live demo, e.g. `5`) and drafts an escalation automatically once SLA is exceeded.
 
 **Community issue clustering**
-```
 GET /issues/clusters → 200 [{ category, center_lat, center_lng, report_count, severity, first_reported, latest_reported, issue_ids }, ...]
-```
 Only clusters of 2+ reports are returned. Clustering radius is 300m, same category required — tune `CLUSTER_RADIUS_METERS` in `app/agents/clustering.py`.
 
 **Municipal analytics** (staff-only)
-```
-GET /analytics/overview      → totals, open/resolved/escalated, avg resolution time, SLA compliance %, breakdowns
+GET /analytics/overview → totals, open/resolved/escalated, avg resolution time, SLA compliance %, breakdowns
 GET /analytics/trends?days=N → daily issue-report counts, zero-filled gaps
-GET /analytics/by-authority  → per-department load and average resolution time
-GET /analytics/map           → every individual issue with coordinates (staff view)
-```
+GET /analytics/by-authority → per-department load and average resolution time
+GET /analytics/map → every individual issue with coordinates (staff view)
 
 **Predictive maintenance** (real linear regression + recurrence counting, not a trained ML model)
-```
 GET /analytics/predictions/sensors?horizon_days=14
 GET /analytics/predictions/recurrence?lookback_days=180
-```
 
 **Dev tools** (rehearsing the demo without stale data)
-```
 POST /dev/reset → wipes all users/issues/tickets/logs, reseeds one demo user
-  (email demo@civicrelay.io / password demo1234), returns its id AND a ready-to-use access_token
-```
+(email demo@civicrelay.io / password demo1234), returns its id AND a ready-to-use access_token
 On by default; set `ENABLE_DEV_ROUTES=0` to disable before a real deployment.
 
 **WhatsApp webhook** (Meta calls this, not the frontend)
-```
-GET  /webhooks/whatsapp   - one-time verification handshake
-POST /webhooks/whatsapp   - incoming messages, HMAC-signature verified, no JWT
-```
+GET /webhooks/whatsapp - one-time verification handshake
+POST /webhooks/whatsapp - incoming messages, HMAC-signature verified, no JWT
 
 ---
 
