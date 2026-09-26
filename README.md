@@ -1,4 +1,7 @@
-# CivicRelay
+# 🏙️ CivicRelay: A Human-Gated Multi-Agent Pipeline for Autonomous Civic Issue Resolution and Predictive Infrastructure Monitoring
+
+
+![CivicRelay](Images/Civic-Relay.png)
 
 > **Autonomous Civic Resolution Platform & Municipal Dispatch Engine**
 > *Report a civic issue once. CivicRelay classifies the hazard, identifies the exact municipal authority, files an official legal-grade complaint, actively monitors repair deadlines, and escalates when statutory service charters are breached.*
@@ -38,6 +41,22 @@ When a citizen reports a pothole, water leak, broken streetlight, or illegal was
 
 ---
 
+## Architecture Diagrams
+
+**Full system architecture** — browser app, transport, FastAPI backend, the five-agent pipeline, the predictive layer, the data layer, and every external service, including the paths that bypass the frontend entirely (WhatsApp and IoT intake).
+
+![CivicRelay Full System Architecture](Images/civicrelay-full-system-architecture.png)
+
+**Backend system architecture** — API entry, security & access, the five-agent pipeline, routing & dispatch, SLA/escalation/human-in-the-loop, sensors & prediction, data persistence, and analytics/audit, laid out end to end.
+
+![CivicRelay Backend Architecture](Images/civicrelay-backend-architecture.png)
+
+**End-to-end workflow** — a single report's path from intake through triage, clustering, research, filing, SLA tracking, human-gated escalation, and resolution, plus how sensor data feeds the predictive layer in parallel.
+
+![CivicRelay Workflow](Images/civicrelay-workflow.png)
+
+---
+
 ## 5-Stage Autonomous Agent Engine
 
 ```
@@ -68,6 +87,11 @@ This repo currently combines the original backend (root-level) with the frontend
 
 ```
 Civic-Relay/
+├── Images/                        # Architecture diagrams and project banner
+│   ├── Civic-Relay.png
+│   ├── civicrelay-backend-architecture.png
+│   ├── civicrelay-full-system-architecture.png
+│   └── civicrelay-workflow.png
 ├── app/                           # FastAPI application package
 │   ├── agents/                    # Autonomous agents (Triage, Research, Action, Tracking, Escalation, ...)
 │   ├── routers/                   # API endpoints (users, issues, tickets, uploads, analytics, iot, whatsapp, dev)
@@ -81,7 +105,7 @@ Civic-Relay/
 │   └── storage.py                 # S3 client (falls back to local ./uploads)
 ├── alembic/                       # Database schema migrations
 ├── scripts/                       # simulate_iot_sensors.py and other utility scripts
-├── tests/                         # Pytest suite (53 tests)
+├── tests/                         # Pytest suite
 ├── frontend/                      # React + TypeScript frontend (merged from teammate's repo)
 │   ├── public/                    # Static assets (favicon, robots.txt, sitemap)
 │   ├── src/
@@ -202,7 +226,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-Tests run against an isolated in-memory SQLite database and don't need AWS credentials — they exercise the deterministic fallback paths (keyword classifier, lookup table, templates), which is exactly what runs locally without Bedrock configured. 53 tests cover auth, the full report → ticket → escalation → approval → resolve lifecycle, ownership checks, community clustering (including persistence behavior), rate limiting, the municipal API client, health checks, and the triage classifier.
+Tests run against an isolated in-memory SQLite database and don't need AWS credentials — they exercise the deterministic fallback paths (keyword classifier, lookup table, templates), which is exactly what runs locally without Bedrock configured. Tests cover auth, the full report → ticket → escalation → approval → resolve lifecycle, ownership checks, community clustering (including persistence behavior), rate limiting, the municipal API client, health checks, IoT ingestion and deduplication, WhatsApp webhook handling, predictive maintenance math, and analytics role-gating.
 
 ### Frontend production build
 
