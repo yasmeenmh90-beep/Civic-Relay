@@ -48,7 +48,7 @@ export async function probeSystemStatus(forceRefresh = false): Promise<SystemSta
     return cachedStatus;
   }
 
-  if (probePromise && !forceRefresh) {
+  if (probePromise && !forceRefresh && cachedMode === 'dynamic') {
     return probePromise;
   }
 
@@ -56,7 +56,7 @@ export async function probeSystemStatus(forceRefresh = false): Promise<SystemSta
     const healthUrl = `${API_BASE_URL.replace(/\/$/, '')}/health`;
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       const response = await fetch(healthUrl, { signal: controller.signal });
       clearTimeout(timeoutId);
